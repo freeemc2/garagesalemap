@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GarageSaleMap - Find Garage Sales, Yard Sales & Estate Sales Near You</title>
+    <meta name="description" content="Never miss a garage sale again! Interactive map showing all garage sales, yard sales, and estate sales in your area. Start your 3-day free trial today.">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .lang-toggle {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .lang-toggle:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        
+        .cta-button {
+            background: #ff6b6b;
+            color: white;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .trial-info {
+            margin-top: 1rem;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        /* Preview Map Section */
+        .preview {
+            padding: 4rem 2rem;
+            background: #f8f9fa;
+            text-align: center;
+        }
+        
+        .preview h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .preview-map {
+            max-width: 900px;
+            margin: 2rem auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            position: relative;
+            height: 500px;
+            background: #e9ecef;
+        }
+        
+        .preview-map iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(102, 126, 234, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .map-overlay-content {
+            background: white;
+            padding: 2rem 3rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        
+        .map-overlay h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+        
+        /* Features */
+        .features {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+        
+        /* Pricing */
+        .pricing {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        
+        .pricing h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .price-box {
+            background: white;
+            color: #333;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #667eea;
+            margin: 1rem 0;
+        }
+        
+        .price-period {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .price-features {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        
+        .price-features li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+        
+        .price-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        /* Social Proof */
+        .social-proof {
+            padding: 4rem 2rem;
+            background: #f8f9fa;
+            text-align: center;
+        }
+        
+        .social-proof h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1.1rem; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .stats { flex-direction: column; gap: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">🗺️ GarageSaleMap</div>
+            <button class="lang-toggle" onclick="toggleLanguage()">
+                <span id="lang-text">Español</span>
+            </button>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1 id="hero-title">Never Miss a Garage Sale Again</h1>
+        <p id="hero-subtitle">Find all garage sales, yard sales, and estate sales in your area on one interactive map</p>
+        <a href="/register" class="cta-button">Start Free Trial</a>
+        <p class="trial-info">3 days free, then $7.99/month • Cancel anytime</p>
+    </section>
+
+    <section class="preview">
+        <h2>See Sales Near You</h2>
+        <div class="preview-map">
+            <!-- Sample map showing Fort Myers area with pins -->
+            <div class="map-overlay" onclick="window.location.href='/register'">
+                <div class="map-overlay-content">
+                    <h3>🔍 250+ Sales This Weekend</h3>
+                    <p>Sign up free to unlock the full map</p>
+                    <button class="cta-button">View Map</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <h2>Why GarageSaleMap?</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📍</div>
+                <h3>All Sales in One Place</h3>
+                <p>We aggregate sales from Facebook Marketplace, Craigslist, YardSaleSearch, and more. Stop checking multiple sites!</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🗺️</div>
+                <h3>Interactive Map</h3>
+                <p>See exactly where sales are happening. Plan your route for maximum treasure hunting efficiency.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <h3>Updated Daily</h3>
+                <p>Fresh sales added every day. Get notifications for new sales in your area.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Search & Filter</h3>
+                <p>Looking for furniture? Tools? Baby items? Filter sales by keywords to find exactly what you want.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile Friendly</h3>
+                <p>Use on your phone while driving around. GPS shows you the closest sales in real-time.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3>List Your Own</h3>
+                <p>Having a garage sale? List it free and reach thousands of local treasure hunters.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing">
+        <h2>Simple, Affordable Pricing</h2>
+        <div class="price-box">
+            <h3>Unlimited Access</h3>
+            <div class="price">$7.99<span class="price-period">/month</span></div>
+            <ul class="price-features">
+                <li>Unlimited map views</li>
+                <li>Daily updates</li>
+                <li>Mobile app access</li>
+                <li>Email alerts</li>
+                <li>Save favorite sales</li>
+                <li>List your own sales free</li>
+                <li>Cancel anytime</li>
+            </ul>
+            <a href="/register" class="cta-button">Start Free Trial</a>
+            <p style="margin-top: 1rem; color: #666;">3 days free • No credit card required for trial</p>
+        </div>
+    </section>
+
+    <section class="social-proof">
+        <h2>Join Thousands of Treasure Hunters</h2>
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number" id="sales-count">15,000+</div>
+                <div class="stat-label">Sales Mapped</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="user-count">2,500+</div>
+                <div class="stat-label">Happy Users</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">$250K+</div>
+                <div class="stat-label">Treasures Found</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero" style="padding: 3rem 2rem;">
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Ready to Find Hidden Treasures?</h2>
+        <p style="margin-bottom: 2rem;">Start your free 3-day trial now. No credit card required.</p>
+        <a href="/register" class="cta-button">Get Started Free</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 GarageSaleMap.app • <a href="/privacy">Privacy</a> • <a href="/terms">Terms</a></p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">Also available: <a href="https://yardsalemap.app">YardSaleMap.app</a> • <a href="https://yardsalemap.net">YardSaleMap.net</a></p>
+    </footer>
+
+    <script>
+        // Language toggle
+        let currentLang = 'en';
+        
+        const translations = {
+            en: {
+                'hero-title': 'Never Miss a Garage Sale Again',
+                'hero-subtitle': 'Find all garage sales, yard sales, and estate sales in your area on one interactive map',
+                'lang-text': 'Español'
+            },
+            es: {
+                'hero-title': 'Nunca Te Pierdas Otra Venta de Garaje',
+                'hero-subtitle': 'Encuentra todas las ventas de garaje, jardín y patrimonio en tu área en un mapa interactivo',
+                'lang-text': 'English'
+            }
+        };
+        
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'es' : 'en';
+            
+            for (const [id, text] of Object.entries(translations[currentLang])) {
+                const elem = document.getElementById(id);
+                if (elem) elem.textContent = text;
+            }
+            
+            // Update URL param
+            const url = new URL(window.location);
+            url.searchParams.set('lang', currentLang);
+            window.history.pushState({}, '', url);
+        }
+        
+        // Animate counters on scroll
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateValue('sales-count', 0, 15000, 2000);
+                    animateValue('user-count', 0, 2500, 2000);
+                }
+            });
+        }, observerOptions);
+        
+        const stats = document.querySelector('.social-proof');
+        if (stats) observer.observe(stats);
+        
+        function animateValue(id, start, end, duration) {
+            const elem = document.getElementById(id);
+            if (!elem) return;
+            
+            const range = end - start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment * Math.ceil(range / 100);
+                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                elem.textContent = current.toLocaleString() + '+';
+            }, stepTime);
+        }
+    </script>
+</body>
+</html>
