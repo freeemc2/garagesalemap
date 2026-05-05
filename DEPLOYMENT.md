@@ -4,7 +4,7 @@
 
 ```bash
 # 1. Clone to your server
-git clone https://github.com/freeemc2/treasurehunt.git garagesalemap
+git clone https://github.com/freeemc2/garagesalemap.git garagesalemap
 cd garagesalemap
 
 # 2. Run setup script
